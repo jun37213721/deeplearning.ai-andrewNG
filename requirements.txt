@@ -1,0 +1,6 @@
+jupyterlab
+numpy
+h5py
+matplotlib
+pillow
+imageio
