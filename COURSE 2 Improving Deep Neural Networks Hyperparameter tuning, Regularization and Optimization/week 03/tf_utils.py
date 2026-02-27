@@ -80,7 +80,7 @@ def predict(X, parameters):
               "b2": b2,
               "W3": W3,
               "b3": b3}
-    
+    '''
     x = tf.placeholder("float", [12288, 1])
     
     z3 = forward_propagation_for_predict(x, params)
@@ -88,8 +88,11 @@ def predict(X, parameters):
     
     sess = tf.Session()
     prediction = sess.run(p, feed_dict = {x: X})
+    '''
+    z3 = forward_propagation_for_predict(X, params)
+    prediction = tf.argmax(z3)
         
-    return prediction
+    return prediction.numpy()
 
 def forward_propagation_for_predict(X, parameters):
     """
@@ -119,4 +122,16 @@ def forward_propagation_for_predict(X, parameters):
     Z3 = tf.add(tf.matmul(W3, A2), b3)                     # Z3 = np.dot(W3,Z2) + b3
     
     return Z3
-    
+
+def tf1_str(var: tf.Variable):
+    """
+    打印类似 TF1 的 tf.Variable 信息：<tf.Variable 'name' shape=() dtype=...>
+    """
+    dtype_str = str(var.dtype)
+    # 在 TF1 中 dtype 后面通常有 _ref
+    if dtype_str.startswith("float") or dtype_str.startswith("int") or dtype_str.startswith("bool"):
+        dtype_str += "_ref"
+
+    # 安全获取 name，如果不存在则用 "<unknown>"
+    name = getattr(var, 'name', '<unknown>')
+    return f"<tf.Variable '{name}' shape={tuple(var.shape)} dtype={dtype_str}>"
